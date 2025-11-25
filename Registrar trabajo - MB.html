@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Motos Black Cartagenita</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #eef3fa;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 450px;
+        margin: auto;
+        background: #fff;
+        margin-top: 200px;
+        padding: 65px;
+        border-radius: 20px;
+        box-shadow: 10px 4px 12px rgba(0,0,0,0.12);
+    }
+
+    h1, h2 {
+        text-align: center;
+        color: #1a365d;
+    }
+
+    label {
+        font-weight: 600;
+        display: block;
+        margin-top: 15px;
+        color: #444;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 12px;
+        margin-top: 5px;
+        border-radius: 10px;
+        border: 1px solid #cfd6e4;
+        font-size: 15px;
+    }
+
+    textarea {
+        height: 120px;
+        resize: none;
+    }
+
+    .btn {
+        margin-top: 20px;
+        width: 100%;
+        background: #1a4fa3;
+        color: white;
+        padding: 15px;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background: #163f85;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .top-bar {
+        background: #1a4fa3;
+        color: white;
+        padding: 15px;
+        text-align: left;
+        border-radius: 15px 15px 0 0;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- Pantalla de inicio -->
+<div id="inicio" class="container">
+    <h1>Motos Black Cartagenita</h1>
+    <button class="btn" onclick="abrirFormulario()">Registrar trabajo</button>
+</div>
+
+<!-- Formulario -->
+<div id="formulario" class="container hidden">
+    <div class="top-bar">Orden de Trabajo</div>
+
+    <label>Fecha</label>
+    <input type="text" id="fecha" readonly />
+
+    <label>Hora</label>
+    <input type="text" id="hora" readonly />
+
+    <label>Técnico</label>
+    <select id="tecnico">
+        <option>Óscar</option>
+        <option>José</option>
+        <option>Ferney</option>
+        <option>Andrés</option>
+    </select>
+
+    <label>Marca de la moto</label>
+    <input type="text" id="marca" placeholder="Ej: Yamaha, AKT, Honda..." />
+
+    <label>Referencia de la moto</label>
+    <input type="text" id="referencia" placeholder="Ej: FZ16, NKD, CB125..." />
+
+    <label>Trabajo realizado</label>
+    <textarea id="trabajo"></textarea>
+
+    <button class="btn" onclick="guardar()">Guardar</button>
+</div>
+
+<script>
+function abrirFormulario() {
+    document.getElementById("inicio").classList.add("hidden");
+    document.getElementById("formulario").classList.remove("hidden");
+}
+
+// Cargar fecha y hora actuales
+window.onload = function() {
+    const now = new Date();
+
+    document.getElementById("fecha").value =
+        now.toLocaleDateString("es-CO");
+
+    document.getElementById("hora").value =
+        now.toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" });
+};
+
+function guardar() {
+    const datos = {
+        fecha: document.getElementById("fecha").value,
+        hora: document.getElementById("hora").value,
+        tecnico: document.getElementById("tecnico").value,
+        marca: document.getElementById("marca").value,
+        referencia: document.getElementById("referencia").value,
+        trabajo: document.getElementById("trabajo").value,
+    };
+
+    // URL del Google Apps Script
+    const url = "https://script.google.com/macros/s/AKfycby6hQzVzTpXwootohxeeWxxs3y7Gm0Pp2iqVeGv2_T-hOhnIFLK2rvPR2YGS9sJ93d7/exec";
+
+    fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos)
+    })
+    .then(() => {
+        alert("Trabajo registrado correctamente");
+
+        // 1️⃣ Limpiar el formulario
+        document.getElementById("marca").value = "";
+        document.getElementById("referencia").value = "";
+        document.getElementById("trabajo").value = "";
+
+        // 2️⃣ Ocultar formulario
+        document.getElementById("formulario").classList.add("hidden");
+
+        // 3️⃣ Mostrar pantalla de inicio
+        document.getElementById("inicio").classList.remove("hidden");
+    })
+    .catch(() => alert("Error al guardar"));
+}
+
+</script>
+
+</body>
+</html>
