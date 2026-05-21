@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motos Black Cartagenita</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --azul:#002f5f;
+    --azul-2:#407cb9;
+    --gris-txt:#666666;
+    --gris-claro:#e3eaee;
+    --gris-borde:#dcdcdc;
+    --blanco:#ffffff;
+    --ok:#1b7a3d;
+    --ok-bg:#e3f3e9;
+    --err:#b3261e;
+    --err-bg:#fbe6e5;
+    --radius:14px;
+}
+*{box-sizing:border-box;}
+body{
+    margin:0;min-height:100vh;
+    font-family:'Sora',sans-serif;
+    color:var(--azul);
+    background:var(--gris-claro);
+}
+.pantalla{
+    min-height:100vh;display:flex;justify-content:center;align-items:center;
+    padding:24px;animation:fade .3s ease;
+}
+.hidden{display:none !important;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+.card{
+    width:100%;max-width:420px;background:var(--blanco);
+    border:1px solid var(--gris-borde);border-radius:var(--radius);
+    padding:38px 30px;box-shadow:0 12px 40px #002f5f1a;
+}
+.card.grande{max-width:960px;}
+
+.brand{text-align:center;margin-bottom:24px;}
+.brand.izq{text-align:left;}
+.logo{width:160px;height:auto;margin:0 auto 16px;display:block;}
+.badge{
+    display:inline-block;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--azul-2);border:1px solid var(--azul-2);border-radius:999px;
+    padding:5px 14px;margin-bottom:16px;font-weight:600;
+}
+h1{font-size:28px;line-height:1.1;margin:0;font-weight:800;}
+h1 .acc{color:var(--azul-2);}
+h2{font-size:22px;margin:0 0 4px;font-weight:800;}
+.sub{color:var(--gris-txt);font-size:14px;margin:6px 0 0;}
+
+.field{margin-top:16px;}
+label{display:block;font-size:13px;font-weight:600;color:var(--gris-txt);margin-bottom:6px;}
+input,select,textarea{
+    width:100%;padding:13px 14px;background:var(--blanco);color:var(--azul);
+    border:1px solid var(--gris-borde);border-radius:10px;
+    font-family:inherit;font-size:15px;transition:border-color .2s,box-shadow .2s;
+}
+input:focus,select:focus,textarea:focus{
+    outline:none;border-color:var(--azul-2);box-shadow:0 0 0 3px #407cb933;
+}
+input[readonly]{background:var(--gris-claro);color:var(--gris-txt);}
+textarea{height:110px;resize:vertical;}
+.row{display:flex;gap:14px;flex-wrap:wrap;}
+.row .field{flex:1;min-width:160px;}
+
+.btn,.btn-sec{
+    width:100%;padding:14px;border:none;border-radius:11px;
+    font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;margin-top:20px;
+    transition:transform .12s,background .2s,opacity .2s;
+}
+.btn{background:var(--azul);color:#fff;}
+.btn:hover{background:#013a76;}
+.btn:active{transform:scale(.985);}
+.btn:disabled{opacity:.6;cursor:not-allowed;}
+.btn-sec{background:var(--gris-claro);color:var(--azul);margin-top:10px;}
+.btn-sec:hover{background:#d3dee6;}
+
+.msg{margin-top:16px;padding:12px 14px;border-radius:10px;font-size:14px;display:none;}
+.msg.show{display:block;}
+.msg.ok{background:var(--ok-bg);color:var(--ok);border:1px solid #b6dcc4;}
+.msg.err{background:var(--err-bg);color:var(--err);border:1px solid #f0bbb8;}
+
+/* resumen / contador */
+.resumen{
+    display:none;margin-top:20px;gap:14px;flex-wrap:wrap;
+}
+.resumen.show{display:flex;}
+.stat{
+    flex:1;min-width:140px;background:var(--gris-claro);
+    border:1px solid var(--gris-borde);border-radius:12px;padding:16px;
+}
+.stat .num{font-size:26px;font-weight:800;color:var(--azul-2);line-height:1;}
+.stat .lbl{font-size:12px;color:var(--gris-txt);margin-top:6px;text-transform:uppercase;letter-spacing:1px;}
+
+.buscador{display:none;margin-top:18px;gap:12px;}
+.buscador.show{display:flex;flex-wrap:wrap;}
+.buscador #filtroAdminTecnico{flex:0 0 220px;max-width:100%;}
+.buscador #buscarTexto{flex:1;min-width:200px;}
+@media(max-width:560px){
+    .buscador #filtroAdminTecnico,.buscador #buscarTexto{flex:1 1 100%;}
+}
+
+.tabla-wrap{margin-top:18px;overflow-x:auto;border:1px solid var(--gris-borde);border-radius:12px;}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:680px;}
+th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--gris-borde);}
+th{background:var(--azul);color:#fff;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:1px;}
+tbody tr:nth-child(even){background:#f6f9fb;}
+tbody tr:hover{background:#eaf1f7;}
+td:last-child{color:var(--gris-txt);}
+.vacio{text-align:center;color:var(--gris-txt);padding:30px;}
+.hint-scroll{display:none;font-size:12px;color:var(--gris-txt);margin:0;padding:8px 14px;background:var(--gris-claro);}
+@media(max-width:560px){.hint-scroll{display:block;}}
+
+/* modal detalle */
+.modal-fondo{
+    position:fixed;inset:0;background:#002f5fcc;display:flex;align-items:center;justify-content:center;
+    padding:18px;z-index:50;animation:fade .2s ease;
+}
+.modal-caja{
+    background:#fff;border-radius:16px;width:100%;max-width:480px;padding:28px 24px;
+    max-height:88vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px #00000055;
+}
+.modal-caja h3{margin:0 0 18px;font-size:20px;}
+.modal-x{
+    position:absolute;top:14px;right:14px;border:none;background:var(--gris-claro);
+    width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:15px;color:var(--gris-txt);
+}
+.modal-x:hover{background:#d3dee6;}
+.det{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--gris-borde);font-size:15px;}
+.det-col{flex-direction:column;align-items:flex-start;}
+.det-lbl{color:var(--gris-txt);font-size:13px;font-weight:600;}
+.det-col p{margin:8px 0 0;line-height:1.5;white-space:pre-wrap;}
+tbody tr{cursor:pointer;}
+
+.spin{
+    width:16px;height:16px;border-radius:50%;
+    border:2px solid #ffffff55;border-top-color:#fff;
+    display:inline-block;vertical-align:-3px;margin-right:8px;animation:rot .7s linear infinite;
+}
+@keyframes rot{to{transform:rotate(360deg);}}
+
+/* ---------- Móvil ---------- */
+@media(max-width:560px){
+    .pantalla{padding:14px;align-items:flex-start;}
+    .card{padding:26px 18px;border-radius:12px;}
+    .card.grande{padding:24px 16px;}
+    h1{font-size:23px;}
+    h2{font-size:20px;}
+    /* 16px evita que iOS haga zoom automático al tocar un campo */
+    input,select,textarea{font-size:16px;padding:14px;}
+    .row{gap:0;}
+    .row .field{flex:1 1 100%;min-width:100%;}
+    .btn,.btn-sec{padding:16px;font-size:16px;}
+    .resumen{gap:10px;}
+    .stat{min-width:calc(50% - 5px);padding:14px;}
+    .stat .num{font-size:22px;}
+    th,td{padding:10px 12px;white-space:nowrap;}
+    .tabla-wrap{-webkit-overflow-scrolling:touch;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ INICIO ============ -->
+<div id="inicio" class="pantalla">
+    <div class="card">
+        <div class="brand">
+            <!-- Logo del taller. El archivo logo.png debe estar en la misma
+                 carpeta que index.html en tu repositorio de GitHub. -->
+            <img class="logo" src="logo.png" alt="Motos Black Cartagenita">
+            <h1>Motos Black<br><span class="acc">Cartagenita</span></h1>
+            <p class="sub">Registro de trabajos de mecánica</p>
+        </div>
+        <button class="btn" id="btnIngresar">Registrar trabajo</button>
+        <button class="btn-sec" id="btnVerRegistros">Consultar registros</button>
+    </div>
+</div>
+
+<!-- ============ FORMULARIO ============ -->
+<div id="formulario" class="pantalla hidden">
+    <div class="card grande">
+        <div class="brand izq">
+            <h2>Registro de trabajo</h2>
+            <p class="sub">La fecha y la hora se toman automáticamente.</p>
+        </div>
+
+        <div class="row">
+            <div class="field"><label>Fecha</label><input id="fecha" type="text" readonly></div>
+            <div class="field"><label>Hora</label><input id="hora" type="text" readonly></div>
+        </div>
+
+        <div class="field">
+            <label>Técnico</label>
+            <select id="tecnico">
+                <option value="oscar">Oscar</option>
+                <option value="jose">Jose</option>
+                <option value="ferney">Ferney</option>
+                <option value="andres">Andres</option>
+                <option value="yohan">Yohan</option>
+                <option value="juan">Juan</option>
+                <option value="otro">Otro...</option>
+            </select>
+        </div>
+
+        <div class="field hidden" id="campoOtro">
+            <label>Nombre del técnico</label>
+            <input id="tecnicoOtro" type="text" placeholder="Escribe el nombre">
+        </div>
+
+        <div class="row">
+            <div class="field"><label>Marca de la moto</label><input id="marca" type="text" placeholder="Ej: Yamaha"></div>
+            <div class="field"><label>Referencia</label><input id="referencia" type="text" placeholder="Ej: NMAX 155"></div>
+        </div>
+
+        <div class="field">
+            <label>Trabajo realizado</label>
+            <textarea id="trabajo" placeholder="Describe el trabajo realizado..."></textarea>
+        </div>
+
+        <div class="msg" id="msgForm"></div>
+        <button class="btn" id="btnGuardar">Registrar</button>
+        <button class="btn-sec" id="btnVolver1">Volver</button>
+    </div>
+</div>
+
+<!-- ============ CONSULTAS ============ -->
+<div id="consultas" class="pantalla hidden">
+    <div class="card grande">
+        <div class="brand izq">
+            <h2>Consultar registros</h2>
+            <p class="sub">Cada técnico consulta con su propia contraseña.</p>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>Técnico</label>
+                <select id="filtroTecnico">
+                    <option value="oscar">Oscar</option>
+                    <option value="jose">Jose</option>
+                    <option value="ferney">Ferney</option>
+                    <option value="andres">Andres</option>
+                    <option value="yohan">Yohan</option>
+                    <option value="juan">Juan</option>
+                    <option value="otro">Otro...</option>
+                    <option value="admin">🔑 Administrador (ve todo)</option>
+                </select>
+            </div>
+            <div class="field"><label>Fecha (opcional)</label><input type="date" id="filtroFecha"></div>
+        </div>
+
+        <div class="field hidden" id="campoOtroConsulta">
+            <label>Nombre del técnico</label>
+            <input id="filtroTecnicoOtro" type="text" placeholder="Escribe el nombre exacto">
+        </div>
+
+        <div class="field">
+            <label>Contraseña del técnico</label>
+            <input type="password" id="pass" placeholder="••••••••">
+        </div>
+
+        <div class="msg" id="msgConsulta"></div>
+        <button class="btn" id="btnFiltrar">Buscar</button>
+        <button class="btn-sec" id="btnVolver2">Volver</button>
+
+        <!-- contador / resumen -->
+        <div class="resumen" id="resumen">
+            <div class="stat"><div class="num" id="statTotal">0</div><div class="lbl">Trabajos totales</div></div>
+            <div class="stat"><div class="num" id="statTecnico">—</div><div class="lbl">Técnico</div></div>
+            <div class="stat"><div class="num" id="statVisible">0</div><div class="lbl">Mostrados</div></div>
+        </div>
+
+        <!-- buscador de texto -->
+        <div class="buscador" id="buscador">
+            <!-- filtro por técnico: solo aparece en modo administrador -->
+            <select id="filtroAdminTecnico" class="hidden">
+                <option value="">Todos los técnicos</option>
+            </select>
+            <input type="text" id="buscarTexto" placeholder="🔍 Buscar por marca, referencia o trabajo...">
+        </div>
+
+        <div class="tabla-wrap hidden" id="tablaWrap">
+            <p class="hint-scroll">Desliza la tabla → para ver todo</p>
+            <table id="tabla">
+                <thead>
+                    <tr><th>Fecha</th><th>Hora</th><th>Técnico</th><th>Marca</th><th>Referencia</th><th>Trabajo</th></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ============ MODAL DETALLE ============ -->
+<div id="modal" class="modal-fondo hidden">
+    <div class="modal-caja">
+        <button class="modal-x" id="modalCerrar">✕</button>
+        <h3>Detalle del trabajo</h3>
+        <div class="det"><span class="det-lbl">Fecha</span><span id="dFecha"></span></div>
+        <div class="det"><span class="det-lbl">Hora</span><span id="dHora"></span></div>
+        <div class="det"><span class="det-lbl">Técnico</span><span id="dTecnico"></span></div>
+        <div class="det"><span class="det-lbl">Marca</span><span id="dMarca"></span></div>
+        <div class="det"><span class="det-lbl">Referencia</span><span id="dReferencia"></span></div>
+        <div class="det det-col"><span class="det-lbl">Trabajo realizado</span><p id="dTrabajo"></p></div>
+        <button class="btn" id="modalCerrar2">Cerrar</button>
+    </div>
+</div>
+
+<script>
+/* ===================== CONFIG ===================== */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQiN8K-DACgqXhvlCalpqLr8NOlkVUiOGsJIPaYE4AcQe1bc1V-j2c9bT1wu-8fcCT/exec";
+
+/* ===================== UTILIDADES ===================== */
+const $ = id => document.getElementById(id);
+let registrosActuales = [];   // guardamos lo recibido para el buscador
+
+function mostrar(id){
+    document.querySelectorAll(".pantalla").forEach(p => p.classList.add("hidden"));
+    $(id).classList.remove("hidden");
+}
+function mensaje(divId, texto, tipo){
+    const m = $(divId); m.textContent = texto; m.className = "msg show " + tipo;
+}
+function limpiarMensaje(divId){ const m = $(divId); m.className = "msg"; m.textContent = ""; }
+function ponerFechaHora(){
+    const now = new Date();
+    $("fecha").value = now.toLocaleDateString("es-CO");
+    $("hora").value  = now.toLocaleTimeString("es-CO", { hour:"2-digit", minute:"2-digit" });
+}
+
+/* ===================== NAVEGACIÓN ===================== */
+$("btnIngresar").onclick = () => { ponerFechaHora(); limpiarMensaje("msgForm"); mostrar("formulario"); };
+$("btnVerRegistros").onclick = () => { limpiarMensaje("msgConsulta"); mostrar("consultas"); };
+$("btnVolver1").onclick = () => mostrar("inicio");
+$("btnVolver2").onclick = () => mostrar("inicio");
+
+/* ===================== CAMPO "OTRO" ===================== */
+$("tecnico").onchange = function(){
+    $("campoOtro").classList.toggle("hidden", this.value !== "otro");
+};
+$("filtroTecnico").onchange = function(){
+    // el campo de nombre escrito solo aplica a "otro", no a admin ni a la lista
+    $("campoOtroConsulta").classList.toggle("hidden", this.value !== "otro");
+};
+
+/* ===================== REGISTRAR ===================== */
+$("btnGuardar").onclick = async () => {
+    limpiarMensaje("msgForm");
+
+    let tecnico = $("tecnico").value;
+    if (tecnico === "otro") tecnico = $("tecnicoOtro").value.trim();
+
+    const datos = {
+        fecha: $("fecha").value,
+        hora: $("hora").value,
+        tecnico: tecnico,
+        marca: $("marca").value.trim(),
+        referencia: $("referencia").value.trim(),
+        trabajo: $("trabajo").value.trim()
+    };
+
+    if (!datos.tecnico){ mensaje("msgForm","Indica el nombre del técnico.","err"); return; }
+    if (!datos.marca){ mensaje("msgForm","Falta la marca de la moto.","err"); return; }
+    if (!datos.referencia){ mensaje("msgForm","Falta la referencia de la moto.","err"); return; }
+    if (!datos.trabajo){ mensaje("msgForm","Describe el trabajo realizado.","err"); return; }
+
+    const btn = $("btnGuardar");
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Guardando...';
+
+    try {
+        const res = await fetch(SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(datos)
+        });
+        const json = await res.json();
+
+        if (json.ok){
+            mensaje("msgForm","✓ Registro guardado correctamente.","ok");
+            $("marca").value = ""; $("referencia").value = ""; $("trabajo").value = "";
+            setTimeout(() => mostrar("inicio"), 1200);
+        } else {
+            mensaje("msgForm", json.error || "No se pudo guardar el registro.","err");
+        }
+    } catch (e){
+        mensaje("msgForm","Error de conexión. Revisa tu internet e inténtalo de nuevo.","err");
+    } finally {
+        btn.disabled = false; btn.textContent = "Registrar";
+    }
+};
+
+/* ===================== CONSULTAR ===================== */
+$("btnFiltrar").onclick = async () => {
+    limpiarMensaje("msgConsulta");
+
+    let tecnico = $("filtroTecnico").value;
+    if (tecnico === "otro") tecnico = $("filtroTecnicoOtro").value.trim();
+
+    const pass = $("pass").value.trim();
+    if (!tecnico){ mensaje("msgConsulta","Indica el nombre del técnico.","err"); return; }
+    if (!pass){ mensaje("msgConsulta","Ingresa la contraseña del técnico.","err"); return; }
+
+    const params = new URLSearchParams({ tecnico, fecha: $("filtroFecha").value, password: pass });
+
+    const btn = $("btnFiltrar");
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Buscando...';
+    $("tablaWrap").classList.add("hidden");
+    $("resumen").classList.remove("show");
+    $("buscador").classList.remove("show");
+    $("filtroAdminTecnico").classList.add("hidden");
+
+    try {
+        const res = await fetch(`${SCRIPT_URL}?${params.toString()}`);
+        const json = await res.json();
+
+        if (json.error){ mensaje("msgConsulta", json.error, "err"); return; }
+
+        registrosActuales = json.registros || [];
+        $("buscarTexto").value = "";
+
+        // contador / resumen
+        $("statTotal").textContent = registrosActuales.length;
+        $("statTecnico").textContent = json.admin ? "ADMIN" : tecnico;
+        $("resumen").classList.add("show");
+
+        // Si es admin: llenar y mostrar el selector "filtrar por técnico"
+        const selAdmin = $("filtroAdminTecnico");
+        if (json.admin && registrosActuales.length > 0){
+            const tecnicos = [...new Set(registrosActuales.map(r => r.tecnico).filter(Boolean))].sort();
+            selAdmin.innerHTML = '<option value="">Todos los técnicos</option>';
+            tecnicos.forEach(t => {
+                const op = document.createElement("option");
+                op.value = t; op.textContent = t;
+                selAdmin.appendChild(op);
+            });
+            selAdmin.value = "";
+            selAdmin.classList.remove("hidden");
+        } else {
+            selAdmin.classList.add("hidden");
+        }
+
+        if (registrosActuales.length > 0) $("buscador").classList.add("show");
+
+        aplicarFiltros();
+        $("tablaWrap").classList.remove("hidden");
+
+        if (registrosActuales.length === 0){
+            mensaje("msgConsulta","No hay registros para este filtro.","ok");
+        } else {
+            limpiarMensaje("msgConsulta");
+        }
+    } catch (e){
+        mensaje("msgConsulta","Error de conexión. Inténtalo de nuevo.","err");
+    } finally {
+        btn.disabled = false; btn.textContent = "Buscar";
+    }
+};
+
+/* ===================== FILTRADO (técnico admin + texto) ===================== */
+function aplicarFiltros(){
+    const q = $("buscarTexto").value.toLowerCase().trim();
+    const tecSel = $("filtroAdminTecnico").value;   // vacío = todos
+
+    const filtrados = registrosActuales.filter(r => {
+        // filtro por técnico (solo activo en modo admin, cuando hay valor)
+        if (tecSel && r.tecnico !== tecSel) return false;
+        // filtro por texto
+        if (q){
+            const coincide =
+                String(r.marca).toLowerCase().includes(q) ||
+                String(r.referencia).toLowerCase().includes(q) ||
+                String(r.trabajo).toLowerCase().includes(q);
+            if (!coincide) return false;
+        }
+        return true;
+    });
+    pintarTabla(filtrados);
+}
+
+/* ===================== BUSCADOR DE TEXTO + FILTRO TÉCNICO ===================== */
+$("buscarTexto").oninput = aplicarFiltros;
+$("filtroAdminTecnico").onchange = aplicarFiltros;
+
+/* ===================== PINTAR TABLA ===================== */
+function pintarTabla(lista){
+    const cuerpo = document.querySelector("#tabla tbody");
+    cuerpo.innerHTML = "";
+    $("statVisible").textContent = lista.length;
+
+    if (lista.length === 0){
+        cuerpo.innerHTML = '<tr><td colspan="6" class="vacio">Sin resultados.</td></tr>';
+        return;
+    }
+    lista.forEach(r => {
+        const tr = document.createElement("tr");
+        [r.fecha, r.hora, r.tecnico, r.marca, r.referencia, r.trabajo].forEach(val => {
+            const td = document.createElement("td");
+            td.textContent = val ?? "";   // seguro contra inyección
+            tr.appendChild(td);
+        });
+        tr.onclick = () => abrirModal(r);
+        cuerpo.appendChild(tr);
+    });
+}
+
+/* ===================== MODAL DETALLE ===================== */
+function abrirModal(r){
+    $("dFecha").textContent      = r.fecha ?? "";
+    $("dHora").textContent       = r.hora ?? "";
+    $("dTecnico").textContent    = r.tecnico ?? "";
+    $("dMarca").textContent      = r.marca ?? "";
+    $("dReferencia").textContent = r.referencia ?? "";
+    $("dTrabajo").textContent    = r.trabajo ?? "";
+    $("modal").classList.remove("hidden");
+}
+function cerrarModal(){ $("modal").classList.add("hidden"); }
+$("modalCerrar").onclick = cerrarModal;
+$("modalCerrar2").onclick = cerrarModal;
+$("modal").onclick = (e) => { if (e.target.id === "modal") cerrarModal(); };
+</script>
+</body>
+</html>
